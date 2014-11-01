@@ -1,11 +1,20 @@
-#!/usr/bin/env bash
+#!/bin/bash
+touch /u/masont/Documents/botideas
 
-
-read nick chan cmd args saying
-if `echo $saying | grep -i '\bneed a bot\b' > /dev/null` ; then
+read nick chan saying
+if `echo $saying | grep -i '\bneed a\b' | grep -i '\bbot\b' > /dev/null` ; then
     echo "PRIVMSG $chan :$nick: you could write it..."
+    echo "$nick: $saying" >> /u/masont/Documents/botideas
 elif `echo $saying | grep -i 'bot \bneeds\b' > /dev/null` ; then
     echo "PRIVMSG $chan :$nick: make a pull request :D"
+    echo "$nick: $saying" >> /u/masont/Documents/botideas
+
+elif `echo $saying | egrep -i 'nabb: I need some ideas' > /dev/null` ; then
+    echo "PRIVMSG $nick :Here is what I have for bot ideas as well as who said them: "
+    while read line
+    do
+        echo "PRIVMSG $nick : $line "
+    done < /u/masont/Documents/botideas
 fi
 
 
