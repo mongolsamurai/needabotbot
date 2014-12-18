@@ -8,7 +8,9 @@ if `echo $saying | grep -i '\bneed a\b' | grep -i '\bbot\b' > /dev/null` ; then
 elif `echo $saying | grep -i 'bot \bneeds\b' > /dev/null` ; then
     echo "PRIVMSG $chan :$nick: make a pull request :D"
     echo "$nick: $saying" >> /u/masont/Documents/botideas
-
+elif `echo $saying | grep -i 'nabb: source' > /dev/null` ; then
+    echo "PRIVMSG $chan :$nick: http://goo.gl/IIQt53 is my source file"
+    echo "$nick: $saying" >> /u/masont/Documents/botideas
 elif `echo $saying | egrep -i 'nabb: I need some ideas' > /dev/null` ; then
     echo "PRIVMSG $nick :Here is what I have for bot ideas as well as who said them: "
     while read line
