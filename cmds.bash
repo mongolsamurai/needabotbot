@@ -16,6 +16,12 @@ elif `echo $saying | grep -i '!dropthemic' > /dev/null` ; then
     echo "PRIVMSG $chan : OOOOH! You just got *served*!"
 elif `echo $saying | grep -i 'nabb: are you a bot?' > /dev/null` ; then
     echo "PRIVMSG $chan :$nick: I sure am :)"
+elif `echo $saying | grep -i 'nabb: make me a sandwich' > /dev/null` ; then
+    if [ "$nick" = dom ] ; then
+        echo "PRIVMSG $chan :$nick: Sure thing, buddy."
+    else
+       echo "PRIVMSG $chan :$nick: I'll never be used by the likes of you!"
+    fi        
 elif `echo $saying | grep -i '!kekball' > /dev/null` ; then
     kekball=`sed -n "$randint"p kekball`
     echo "PRIVMSG $chan :$nick: $kekball"
