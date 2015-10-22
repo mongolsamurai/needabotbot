@@ -12,10 +12,12 @@ elif `echo $saying | grep -i 'bot \bneeds\b' > /dev/null` ; then
 elif `echo $saying | grep -i 'nabb: source' > /dev/null` ; then
     echo "PRIVMSG $chan :$nick: http://goo.gl/IIQt53 is my source file"
     echo "$nick: $saying" >> ../botideas
-elif `echo $saying | grep -i '!dropthemic' > /dev/null` ; then
+elif `echo $saying | grep -i '!dropthemic\b' > /dev/null` ; then
     echo "PRIVMSG $chan :OOOOH! You just got *served*!"
 elif `echo $saying | grep -i 'nabb: are you a bot?' > /dev/null` ; then
     echo "PRIVMSG $chan :$nick: I sure am :)"
+elif `echo $saying | grep -i '!domsmugnessquotient' > /dev/null` ; then
+    echo "PRIVMSG $chan :I think we all know..."
 elif `echo $saying | grep -i 'nabb: make me a sandwich' > /dev/null` ; then
     if [ "$nick" = dom ] ; then
         echo "PRIVMSG $chan :$nick: Sure thing, buddy."
@@ -24,7 +26,13 @@ elif `echo $saying | grep -i 'nabb: make me a sandwich' > /dev/null` ; then
     else
        echo "PRIVMSG $chan :$nick: I'll never be used by the likes of you!"
     fi        
-elif `echo $saying | grep -i "nabb: spam\b" > /dev/null` ; then
+elif `echo $saying | grep -i 'nabb: help\b' > /dev/null` ; then
+    if [ "$nick" = dom ] ; then
+        echo "PRIVMSG $chan :dom: Shouldn't you already know?"    
+    else
+        echo "PRIVMSG $chan :$nick: ask me for my source!"
+    fi 
+elif `echo $saying | grep -i 'nabb: spam\b' > /dev/null` ; then
     ticket=`echo $saying | cut -d ' ' -f 3` 
     if [ "$nick" = dom ] ; then
         if [[ $ticket =~ ^[0-9]{6}$ ]] ; then 
@@ -34,12 +42,12 @@ elif `echo $saying | grep -i "nabb: spam\b" > /dev/null` ; then
 elif `echo $saying | grep -i '!kekball' > /dev/null` ; then
     kekball=`sed -n "$randint"p kekball`
     echo "PRIVMSG $chan :$nick: $kekball"
-elif `echo $saying | egrep -i 'nabb: I need some ideas' > /dev/null` ; then
-    echo "PRIVMSG $nick :Here is what I have for bot ideas as well as who said them: "
-    while read line
-    do
-        echo "PRIVMSG $nick : $line "
-    done < ../botideas
+#elif `echo $saying | egrep -i 'nabb: I need some ideas' > /dev/null` ; then
+#    echo "PRIVMSG $nick :Here is what I have for bot ideas as well as who said them: "
+#    while read line
+#    do
+#        echo "PRIVMSG $nick : $line "
+#    done < ../botideas
 fi
 
 

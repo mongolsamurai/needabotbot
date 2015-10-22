@@ -13,6 +13,8 @@ tail -f .botfile | openssl s_client -connect irc.cat.pdx.edu:6697 | while true ;
         send "NICK nabb"
         send "JOIN #domtest"
         send "JOIN #robots $key"
+        send "JOIN #snot $key"
+        send "JOIN #tabletop"
         started="yes"
     fi
     read irc
