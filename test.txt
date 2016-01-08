@@ -22,8 +22,6 @@ elif `echo $saying | grep -i 'sudo make me a sandwich' > /dev/null` ; then
     echo "PRIVMSG $chan :That isn't the way that works and you know it :^)"
 elif `echo $saying | grep -i 'accio corndog' > /dev/null` ; then
     echo "PRIVMSG $chan :zb buy corndog as $nick"
-elif `echo $saying | grep -i 'accio corn dog' > /dev/null` ; then
-    echo "PRIVMSG $chan :zb buy corndog as $nick"
 elif `echo $saying | grep -i 'nabb: make me a sandwich' > /dev/null` ; then
     if [ "$nick" = dom ] ; then
         echo "PRIVMSG $chan :$nick: Sure thing, buddy."
@@ -73,3 +71,37 @@ elif `echo $saying | grep -i '!kekball' > /dev/null` ; then
 fi
 
 
+#!/usr/bin/env bash
+
+key=`cat $1`
+function send {
+    echo "-> $1"
+    echo "$1" >> .botfile
+}
+rm .botfile
+mkfifo .botfile
+tail -f .botfile | openssl s_client -connect irc.cat.pdx.edu:6697 | while true ; do
+    if [[ -z $started ]] ; then
+        send "USER nabb nabb nabb :nabb"
+        send "NICK nabb"
+        send "JOIN #domtest"
+        send "JOIN #robots $key"
+        send "JOIN #snot $key"
+        send "JOIN #tabletop"
+        started="yes"
+    fi
+    read irc
+    echo "<- $irc"
+    if `echo $irc | cut -d ' ' -f 1 | grep PING > /dev/null` ; then
+        send "PONG"
+    elif `echo $irc | grep PRIVMSG > /dev/null` ; then
+        chan=`echo $irc | cut -d ' ' -f 3`
+        barf=`echo $irc | cut -d ' ' -f 1-3`
+        saying=`echo ${irc##$barf :}|tr -d "\r\n"`
+        nick="${irc%%!*}"; nick="${nick#:}"
+        var=$(echo $nick $chan $saying | ./cmds.bash)
+        if [[ ! -z $var ]] ; then
+            send "$var"
+        fi
+    fi
+done
