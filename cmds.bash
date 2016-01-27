@@ -44,7 +44,7 @@ elif `echo $saying | grep -i 'nabb: make me a sandwich' > /dev/null` ; then
     elif [ "$nick" = tombat ] ; then
         echo "PRIVMSG $chan :$nick: Here you go. Its a hip new combination, but its pretty underground, you've probably never heard of it."
     elif [ "$nick" = thyme ] ; then
-        echo "PRIVMSG $chan :$nick: Alright, I guess its sandwich thyme."
+        echo "PRIVMSG $chan :$nick: Alright, its sandwich thyme."
     else
        echo "PRIVMSG $chan :$nick: I'll never be used by the likes of you!"
     fi        
