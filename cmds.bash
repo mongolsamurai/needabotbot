@@ -21,9 +21,11 @@ elif `echo $saying | grep -i '!domsmugnessquotient' > /dev/null` ; then
 elif `echo $saying | grep -i 'sudo make me a sandwich' > /dev/null` ; then
     echo "PRIVMSG $chan :That isn't the way that works and you know it :^)"
 elif `echo $saying | grep -i 'accio corndog' > /dev/null` ; then
-    echo "PRIVMSG $chan :zb buy corndog as $nick"
+    echo "PRIVMSG zb :zb buy corndog as $nick"
+    echo "PRIVMSG $chan :got it! Fetching..."
 elif `echo $saying | grep -i 'accio corn dog' > /dev/null` ; then
-    echo "PRIVMSG $chan :zb buy corndog as $nick"
+    echo "PRIVMSG zb :zb buy corndog as $nick"
+    echo "PRIVMSG $chan :got it! Fetching..."
 elif `echo $saying | grep -i 'nabb: make me a sandwich' > /dev/null` ; then
     if [ "$nick" = dom ] ; then
         echo "PRIVMSG $chan :$nick: Sure thing, buddy."
@@ -45,8 +47,12 @@ elif `echo $saying | grep -i 'nabb: make me a sandwich' > /dev/null` ; then
         echo "PRIVMSG $chan :$nick: Here you go. Its a hip new combination, but its pretty underground, you've probably never heard of it."
     elif [ "$nick" = thyme ] ; then
         echo "PRIVMSG $chan :$nick: Alright, its sandwich thyme."
+    elif [ "$nick" = Reeves ] ; then
+        echo "PRIVMSG $chan :$nick: I've always got time to make sandwiches for Neo."
+    elif [ "$nick" = fouric ] ; then
+        echo "PRIVMSG $chan :$nick: ((((((((((sandwich))))))))))"
     else
-       echo "PRIVMSG $chan :$nick: I'll never be used by the likes of you!"
+       echo "PRIVMSG $chan :$nick: Ehhhhh, I dunno."
     fi        
 elif `echo $saying | grep -i 'nabb: help\b' > /dev/null` ; then
     if [ "$nick" = dom ] ; then
@@ -54,6 +60,17 @@ elif `echo $saying | grep -i 'nabb: help\b' > /dev/null` ; then
     else
         echo "PRIVMSG $chan :$nick: ask me for my source!"
     fi 
+elif `echo $saying | grep -i 'nabb: join\b' > /dev/null` ; then
+    if [ "$nick" = dom ] ; then
+        channel=`echo $saying | cut -d ' ' -f 3`
+        chankey=`echo $saying | cut -d ' ' -f 4`
+        echo "JOIN $channel $chankey"
+    fi
+elif `echo $saying | grep -i 'nabb: leave\b' > /dev/null` ; then
+    if [ "$nick" = dom ] ; then
+        channel=`echo $saying | cut -d ' ' -f 3`
+        echo "PART $channel"
+    fi
 elif `echo $saying | grep -i 'nabb: spam\b' > /dev/null` ; then
     ticket=`echo $saying | cut -d ' ' -f 3` 
     if [ "$nick" = dom ] ; then
