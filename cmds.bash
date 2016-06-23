@@ -78,15 +78,20 @@ elif `echo $saying | grep -i 'nabb: spam\b' > /dev/null` ; then
             snot -F SPAM $ticket
         fi 
     fi
+elif `echo $saying | grep -i 'assigned' | grep -i 'mwilliam' > /dev/null` ; then
+    if [ "$nick" = _ ] ; then
+        echo $saying | cut -d ' ' -f 3 >> watchtix
+    fi
+elif `echo $saying | grep -i 'updated by' > /dev/null` ; then
+    if [ "$nick" = _ ] ; then
+        tik=`echo $saying | cut -d ' ' -f 1`
+        if `grep -i $tik watchtix > /dev/null` ; then
+            echo "PRIVMSG #snot :thyme: ^"
+        fi
+    fi
 elif `echo $saying | grep -i '!kekball' > /dev/null` ; then
     kekball=`sed -n "$randint"p kekball`
     echo "PRIVMSG $chan :$nick: $kekball"
-#elif `echo $saying | egrep -i 'nabb: I need some ideas' > /dev/null` ; then
-#    echo "PRIVMSG $nick :Here is what I have for bot ideas as well as who said them: "
-#    while read line
-#    do
-#        echo "PRIVMSG $nick : $line "
-#    done < ../botideas
 fi
 
 
