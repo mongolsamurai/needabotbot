@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-key=`cat $1`
 function send {
     echo "-> $1"
     echo "$1" >> .botfile
@@ -12,9 +11,6 @@ tail -f .botfile | openssl s_client -connect irc.cat.pdx.edu:6697 | while true ;
         send "USER nabb nabb nabb :nabb"
         send "NICK nabb"
         send "JOIN #domtest"
-        send "JOIN #robots $key"
-        send "JOIN #snot $key"
-        send "JOIN #tabletop"
         started="yes"
     fi
     read irc

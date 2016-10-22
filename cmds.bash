@@ -1,5 +1,6 @@
 #!/bin/bash
 touch ../botideas
+touch maintainerfile
 randint=`dice 9`
 
 read nick chan saying
@@ -9,9 +10,11 @@ if `echo $saying | grep -i '\bneed a\b' | grep -i '\bbot\b' > /dev/null` ; then
 elif `echo $saying | grep -i 'bot \bneeds\b' > /dev/null` ; then
     echo "PRIVMSG $chan :$nick: make a pull request :^D"
     echo "$nick: $saying" >> ../botideas
+elif `echo $saying | grep -i 'feature \brequest\b' > /dev/null` ; then
+    echo "PRIVMSG $chan :$nick: make a pull request :^D"
+    echo "$nick: $saying" >> ../botideas
 elif `echo $saying | grep -i 'nabb: source' > /dev/null` ; then
     echo "PRIVMSG $chan :$nick: http://goo.gl/IIQt53 is my source file"
-    echo "$nick: $saying" >> ../botideas
 elif `echo $saying | grep -i '!dropthemic\b' > /dev/null` ; then
     echo "PRIVMSG $chan :OOOOH! You just got *served*!"
 elif `echo $saying | grep -i 'nabb: are you a bot?' > /dev/null` ; then
@@ -71,6 +74,10 @@ elif `echo $saying | grep -i 'nabb: leave\b' > /dev/null` ; then
         channel=`echo $saying | cut -d ' ' -f 3`
         echo "PART $channel"
     fi
+elif `echo $saying | grep -i 'nabb: dice\b' > /dev/null` ; then
+        numberwang=`echo $saying | cut -d ' ' -f 3`
+        newnumberwang=`dice $numberwang`
+        echo "PRIVMSG $chan :$nick: $newnumberwang"
 elif `echo $saying | grep -i 'nabb: spam\b' > /dev/null` ; then
     ticket=`echo $saying | cut -d ' ' -f 3` 
     if [ "$nick" = dom ] ; then
@@ -78,14 +85,56 @@ elif `echo $saying | grep -i 'nabb: spam\b' > /dev/null` ; then
             snot -F SPAM $ticket
         fi 
     fi
+elif `echo $saying | grep -i '^nabb:' | grep -i 'who ' | grep 'runs\|owns\|maintains' | grep "?" > /dev/null` ; then
+    lookbot=$(echo `cat maintainerfile | grep $(echo $saying | sed s/nabb:// | cut -d ' ' -f 4 | sed s/?//g)` | cut -d ' ' -f 2- | tr '[:upper]' '[:lower]') 
+    lookerlook=$(echo $saying | sed s/nabb:// | cut -d ' ' -f 4 | sed s/?// | tr '[:upper]' '[:lower]')
+    if ! grep "$lookerlook" maintainerfile >/dev/null; then
+        echo "PRIVMSG $chan :$nick: I don't know anything about $lookerlook."
+        continue
+    else
+        echo "PRIVMSG $chan :$nick: $lookbot run(s), own(s) or maintain(s) $lookerlook."
+    fi
+elif `echo $saying | grep -i '^nabb:' | grep 'run\|own\|maintain' | grep $'don\'t\|doesn\'t'> /dev/null` ; then
+    saying=$(echo $saying | sed s/nabb://g)
+    runner=$(echo $saying | cut -d ' ' -f 1 | tr '[:upper:]' '[:lower:]')
+    bot=$(echo $saying | cut -d ' ' -f 4 | tr '[:upper:]' '[:lower:]')
+    if [ "$name" = I ] ; then
+        runner=$nick
+    fi
+    if [ "$name" = i ] ; then
+        runner=$nick
+    fi
+    sed "/^$bot.*/ s/$runner, //" -i maintainerfile
+    sed "/^$bot.*/ s/, $runner$//" -i maintainerfile
+    sed "/^$bot.*/ s/ $runner$//" -i maintainerfile
+elif `echo $saying | grep -i '^nabb:' | grep 'forget' > /dev/null` ; then
+    if ! "$nick" = dom ; then
+        continue
+    fi
+    bot=$(echo $saying | cut -d ' ' -f 3 | tr '[:upper]' '[:lower]')
+    sed "/^$bot.*$/d" -i maintainerfile
+    echo "PRIVMSG $chan :$nick: I forgot about $bot."
+elif `echo $saying | grep -i '^nabb:' | grep 'run\|own\|maintain' > /dev/null` ; then
+    saying=$(echo $saying | sed s/nabb://g | tr '[:upper:]' '[:lower:]')
+    lookbot=$(echo $saying | cut -d ' ' -f 1 | tr '[:upper:]' '[:lower:]')
+    if [ "$lookbot" = I ] ; then
+        nickadd=$nick
+    elif [ "$lookbot" = I ] ; then
+        nickadd=$nick
+    else
+        nickadd=$lookbot
+    fi
+    lookerlookbot=$(echo $saying | cut -d ' ' -f 3 | tr '[:upper]' '[:lower]')
+    grep -q "$lookerlookbot" maintainerfile && sed "/^$lookerlookbot.*/ s/$/, $nickadd/" -i maintainerfile || echo "$lookerlookbot $nickadd" >> maintainerfile
+    echo "PRIVMSG $chan :$nick: Noted. I've added it to my record."
 elif `echo $saying | grep -i 'assigned' | grep -i 'mwilliam' > /dev/null` ; then
     if [ "$nick" = _ ] ; then
-        echo $saying | cut -d ' ' -f 3 >> watchtix
+        echo $saying | cut -d ' ' -f 3 >> ~/open/watchtix
     fi
 elif `echo $saying | grep -i 'updated by' > /dev/null` ; then
     if [ "$nick" = _ ] ; then
         tik=`echo $saying | cut -d ' ' -f 1`
-        if `grep -i $tik watchtix > /dev/null` ; then
+        if `grep -i $tik ~/open/watchtix > /dev/null` ; then
             echo "PRIVMSG #snot :thyme: ^"
         fi
     fi
