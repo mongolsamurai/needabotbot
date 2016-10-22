@@ -1,7 +1,0 @@
-#!/bin/bash
-
-tik=#231
-
-if `grep -i $tik watchtix > /dev/null` ; then
-    echo "found it!"
-fi
